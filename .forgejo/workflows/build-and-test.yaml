@@ -49,6 +49,7 @@ jobs:
         with:
           files: coverage.out
           fail_ci_if_error: false
+          use_pypi: true
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
