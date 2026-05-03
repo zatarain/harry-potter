@@ -45,12 +45,11 @@ jobs:
         run: make coverage
 
       - name: Upload coverage to Codecov
-        uses: https://github.com/codecov/codecov-action@v6
+        uses: https://codeberg.org/geo-gaussian/codecov-action@main
         with:
           files: coverage.out
           fail_ci_if_error: false
         env:
-          DEFAULT_ACTIONS_URL: https://github.com
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   build:
