@@ -1,6 +1,6 @@
 package main
 
-import "github.com/utirado/harry-potter/command"
+import "codeberg.org/zatarain/harry-potter/command"
 
 func main() {
 	command.Execute()

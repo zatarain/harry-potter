@@ -24,7 +24,7 @@
 ## 📦 Installation
 
 ```sh
-git clone https://github.com/utirado/harry-potter.git
+git clone https://codeberg.org/zatarain/harry-potter.git
 cd harry-potter
 make build
 make install   # installs harry-potter and creates hp, harry, potter symlinks in /usr/local/bin

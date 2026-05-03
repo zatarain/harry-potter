@@ -1,4 +1,4 @@
-module github.com/utirado/harry-potter
+module codeberg.org/zatarain/harry-potter
 
 go 1.22
 
