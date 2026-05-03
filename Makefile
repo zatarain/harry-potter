@@ -1,16 +1,15 @@
 BINARY     := harry-potter
 ALIASES    := hp harry potter
 MODULE     := codeberg.org/zatarain/harry-potter
-VERSION    := $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
-COMMIT     := $(shell git rev-parse --short HEAD 2>/dev/null || echo none)
-BUILD_DATE := $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
-LDFLAGS    := -ldflags "-X $(MODULE)/command.Version=$(VERSION) -X $(MODULE)/command.Commit=$(COMMIT) -X $(MODULE)/command.BuildDate=$(BUILD_DATE)"
 DESTDIR    ?= /usr/local/bin
 
 .PHONY: build clean install uninstall lint vet fmt check-fmt test coverage tidy
 
 build:
-	go build $(LDFLAGS) -o bin/$(BINARY) .
+	@VERSION=$$(git describe --tags --always --dirty 2>/dev/null || echo dev); \
+	COMMIT=$$(git rev-parse --short HEAD 2>/dev/null || echo none); \
+	BUILD_DATE=$$(date -u '+%Y-%m-%dT%H:%M:%SZ'); \
+	go build -ldflags "-X $(MODULE)/command.Version=$$VERSION -X $(MODULE)/command.Commit=$$COMMIT -X $(MODULE)/command.BuildDate=$$BUILD_DATE" -o bin/$(BINARY) .
 
 tidy:
 	go mod tidy
