@@ -60,10 +60,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - goos: freebsd
-            goarch: amd64
-          - goos: freebsd
-            goarch: arm64
+          - operating-system: freebsd
+            architecture: amd64
+          - operating-system: freebsd
+            architecture: arm64
     steps:
       - uses: actions/checkout@v6
         with:
@@ -76,13 +76,13 @@ jobs:
 
       - name: Build
         env:
-          GOOS: ${{ matrix.goos }}
-          GOARCH: ${{ matrix.goarch }}
-        run: make build BINARY=harry-potter-${{ matrix.goos }}-${{ matrix.goarch }}
+          GOOS: ${{ matrix.operating-system }}
+          GOARCH: ${{ matrix.architecture }}
+        run: make build BINARY=harry-potter-${{ matrix.operating-system }}-${{ matrix.architecture }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
-          name: harry-potter-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: bin/harry-potter-${{ matrix.goos }}-${{ matrix.goarch }}
+          name: harry-potter-${{ matrix.operating-system }}-${{ matrix.architecture }}
+          path: bin/harry-potter-${{ matrix.operating-system }}-${{ matrix.architecture }}
           retention-days: 7
