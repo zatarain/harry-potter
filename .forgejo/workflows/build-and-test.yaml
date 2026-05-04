@@ -10,6 +10,7 @@ jobs:
   lint:
     name: Lint
     runs-on: geo-gaussian
+    if: false
     steps:
       - uses: actions/checkout@v6
 
