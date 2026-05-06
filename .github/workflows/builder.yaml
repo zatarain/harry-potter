@@ -46,16 +46,15 @@ jobs:
         run: make coverage
 
       - name: Upload coverage to Codecov
-        uses: https://codeberg.org/geo-gaussian/codecov-action@main
+        uses: codecov/codecov-action@v3
         with:
           files: coverage.out
           fail_ci_if_error: false
-          use_pypi: true
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   build:
-    name: Build (${{ matrix.goos }}/${{ matrix.goarch }})
+    name: Build (${{ matrix.operating-system }}/${{ matrix.architecture }})
     runs-on: geo-gaussian
     needs: [lint, test]
     strategy:

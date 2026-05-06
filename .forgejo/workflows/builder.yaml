@@ -1,0 +1,89 @@
+name: Harry Potter CI/CD
+
+on:
+  push:
+    branches: [main, test]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: geo-gaussian
+    # if: false
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Check formatting
+        run: make check-fmt
+
+      - name: Vet
+        run: make vet
+
+  test:
+    name: Test
+    runs-on: geo-gaussian
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Verify dependencies
+        run: go mod verify
+
+      - name: Run tests with coverage
+        run: make coverage
+
+      - name: Upload coverage to Codecov
+        uses: https://codeberg.org/geo-gaussian/codecov-action@main
+        with:
+          files: coverage.out
+          fail_ci_if_error: false
+          use_pypi: true
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  build:
+    name: Build (${{ matrix.operating-system }}/${{ matrix.architecture }})
+    runs-on: geo-gaussian
+    needs: [lint, test]
+    strategy:
+      matrix:
+        include:
+          - operating-system: freebsd
+            architecture: amd64
+          - operating-system: freebsd
+            architecture: arm64
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Build
+        env:
+          GOOS: ${{ matrix.operating-system }}
+          GOARCH: ${{ matrix.architecture }}
+        run: make build BINARY=harry-potter-${{ matrix.operating-system }}-${{ matrix.architecture }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: harry-potter-${{ matrix.operating-system }}-${{ matrix.architecture }}
+          path: bin/harry-potter-${{ matrix.operating-system }}-${{ matrix.architecture }}
+          retention-days: 7
